@@ -1,0 +1,54 @@
+<div class="mx-auto max-w-sm space-y-4">
+    <div class="space-y-2 text-center">
+      <h1 class="text-3xl font-bold text-blue-500 dark:text-blue-400">Sign In</h1>
+      <p class="text-gray-500 dark:text-gray-400">Enter your information to sign in</p>
+    </div>
+    <div class="space-y-4">
+      <div class="space-y-2">
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-500 dark:text-blue-400"
+          for="email"
+        >
+          Email
+        </label>
+        <input
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-black dark:text-black"
+          id="email"
+          placeholder="m@example.com"
+          required=""
+          type="email"
+        />
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-500 dark:text-blue-400"
+            for="password"
+          >
+            Password
+          </label>
+          <a class="text-sm underline text-blue-500 dark:text-blue-400" href="/reset-password">
+            Forgot your password?
+          </a>
+        </div>
+        <input
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-black dark:text-black"
+          id="password"
+          required=""
+          type="password"
+        />
+      </div>
+      <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 px-4 py-2 w-full bg-blue-500 dark:bg-blue-400 text-white dark:text-gray-900">
+        Sign In
+      </button>
+      <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+        Sign in with Google
+      </button>
+      <div class="flex items-center space-x-2 text-sm">
+        <p class="text-blue-500 dark:text-blue-400">Don't have an account?</p>
+        <a class="font-semibold underline text-blue-500 dark:text-blue-400" href="/sign-up">
+          Register
+        </a>
+      </div>
+    </div>
+  </div>
