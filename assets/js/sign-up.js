@@ -12,19 +12,28 @@ document.addEventListener('DOMContentLoaded', function () {
         // client side validation
         const regexName = /^[a-zA-Z]+$/;
         if(!regexName.test(firstName)){
-            throw new Error('First Name should contain only alphabates');
+            showErrorAlert('First Name','Input field should contain only alphabates!');
+            throw new Error();
         }
         if(!regexName.test(lastName)){
-            throw new Error('Last Name should contain only alphabates');
+            showErrorAlert('Last Name','Input field should contain only alphabates!');
+            throw new Error();
         }
         const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!regexEmail.test(email)){
-            throw new Error('Invalid email id');
+            showErrorAlert('Invalid email id','Check your email again!');
+            throw new Error();
         }
         // check password and confirm password matches
-        if(password !== confirmPassword){
-            throw new Error('Password does not matches');
+        if(password===""){
+            showErrorAlert('Empty Passwords','Are you kidding?');
+            throw new Error();
         }
+        if(password !== confirmPassword){
+            showErrorAlert('Confirm Passwords','Check your passwords; they do not match!');
+            throw new Error();
+        }
+
         // Construct an object with the input data
         const userData = {
             firstName: firstName,
@@ -44,13 +53,33 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then( data=> {
             if (data.success) {
+                showSuccessAlert("Signed Up!",data.message);
                 window.location.href = '/sign-in'; // Redirect to success page
             } else {
-                throw new Error(data.error);
+                showErrorAlert('Sign Up Failure',data.error);
+                throw new Error();
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
+        .catch((error) => {
+            console.log(error);
         });
     });
 });
+
+function showSuccessAlert(title,message) {
+    Swal.fire({
+      title: title,
+      text: message,
+      icon: 'success', 
+      confirmButtonText: 'OK',
+    });
+}
+
+function showErrorAlert(title,error) {
+    Swal.fire({
+      title: title,
+      text: error,
+      icon: 'error', 
+      confirmButtonText: 'OK',
+    });
+}
