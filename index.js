@@ -9,8 +9,8 @@ const db= require('./middleware/mongoose')
 
 
 
-
-
+app.use(express.json());
+app.use(express.static('./assets'));
 //view engine
 app.set('view engine','ejs'); //use express view engine
 app.set('views','./views');//default viws route
