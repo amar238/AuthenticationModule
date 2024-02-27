@@ -2,6 +2,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const User = require('../model/user');
 const saltRounds = parseInt(process.env.saltRounds);
+const axios = require('axios');
 
 // render sign in page
 module.exports.signInPage = (req,res)=>{
@@ -23,11 +24,13 @@ module.exports.signUpPage = (req,res)=>{
 // create user
 module.exports.create = async(req,res)=>{
     try {
-        var firstName = req.body.firstName;
-        var lastName = req.body.lastName;
-        var email = req.body.email;
-        var password = req.body.password;
-        var confirmPassword = req.body.confirmPassword;
+        var {firstName, lastName, email, password, confirmPassword, recaptchaToken} = req.body;
+        // Validate reCAPTCHA token
+        const recaptchaSecretKey = process.env.recaptchaSecretKey
+        const recaptchaResponse = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${recaptchaToken}`);
+        if (!recaptchaResponse.data.success || recaptchaResponse.data.score < 0.5) {
+            return res.status(400).json({ success: false, error: 'reCAPTCHA validation failed' });
+        }
         // validation
         if(!validator.isAlpha(firstName) || !validator.isAlpha(lastName)){
             return res.status(400).json({ success:false, error: 'First name and last name should only contain alphabets!'});
@@ -42,8 +45,7 @@ module.exports.create = async(req,res)=>{
                     email:email,
                     password:hashedPassword
                 });
-            }
-            else{
+            }else{
                 return res.status(400).json({ success:false, error: 'Password and confirmed password does not match!'});
             }
             return res.status(200).json({ success:true, message:'User created successfully!'});
@@ -52,7 +54,7 @@ module.exports.create = async(req,res)=>{
         }
     }
     catch (error) {
-        console.log(error)
+        return res.status(400).json({ success:false, error: 'User already exist with this email'});
     }
 }
 
