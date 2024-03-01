@@ -4,7 +4,12 @@ const app = express();
 require("dotenv").config();
 const db= require('./middleware/mongoose')
 
-
+// for session cookie
+const session = require('express-session');
+const passport = require("passport");
+const passportLocal = require('./middleware/passport-local-strategy');
+const passportGoogle = require('./middleware/passport-google-oauth2-strategy');
+const MongoStore = require('connect-mongo');
 
 
 
@@ -17,6 +22,27 @@ app.set('views','./views');//default viws route
 app.use(expressLayouts);
 app.set("layout extractStyles", true);
 app.set("layout extractScripts", true);
+
+app.use(session({
+    name : 'CSV',
+    // TO DO : change secret before devlopment////////////////////////////////////////////////////////////
+    secret : 'blahsomething',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge : (1000 * 60 * 100)
+    },
+    // mongoStore used to store session cookie
+    store: new MongoStore({
+        mongoUrl: db._connectionString,
+        autoRemove: 'disabled'
+    },(err)=>{console.log(err)}
+    )
+}));
+//Authentication middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/',require('./routes/routes.index'));
 

@@ -38,12 +38,16 @@
           type="password"
         />
       </div>
-      <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 px-4 py-2 w-full bg-blue-500 dark:bg-blue-400 text-white dark:text-gray-900">
+      <button id="signInButton" data-sitekey="6LcoRYEpAAAAAGsame5vBlmyHlrcNJSJRNbc6n45" data-action='submit'
+      onclick="onClick(event)"
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 px-4 py-2 w-full bg-blue-500 dark:bg-blue-400 text-white dark:text-gray-900">
         Sign In
       </button>
-      <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+      <a href="/auth/google">
+      <button onclick="onClickGoogle(event)"
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
         Sign in with Google
-      </button>
+      </button></a>
       <div class="flex items-center space-x-2 text-sm">
         <p class="text-blue-500 dark:text-blue-400">Don't have an account?</p>
         <a class="font-semibold underline text-blue-500 dark:text-blue-400" href="/sign-up">
@@ -52,3 +56,4 @@
       </div>
     </div>
   </div>
+  <script src="/js/sign-in.js"></script>

@@ -1,0 +1,58 @@
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const User = require('../model/user');
+const LocalStrategy = require("passport-local").Strategy;
+
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+    },
+    async (email, password, done) => {
+        try {
+            const user = await User.findOne({ email: email});  
+            if (!user) {
+                return done(null, false, { message: 'Incorrect email.' });
+            }
+            // Compare hashed password
+            const result =await bcrypt.compare(password, user.password);
+            if (result) {
+                return done(null, user);
+            } else {
+                  return done(null, false, { message: 'Incorrect password.' });
+            }
+        } catch (error) {
+            console.log(error)
+}}));
+
+passport.serializeUser((user, done) => {
+    return done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user =await User.findById(id);
+        return done(null, user);
+    } catch (error) {
+        console.log("Error in finding user ---> passport");
+        return done(error);
+    }
+});
+
+passport.checkAuthentication = (req,res,next)=>{
+    // if user is authenticated send to next page
+    if(req.isAuthenticated()){
+        return next();
+    }
+    // sending user back to sign in 
+    return res.redirect('/sign-in');
+}
+
+  
+passport.setAuthenticatedUser = (req,res,next)=>{
+    // req.user contains current signed in user from session cookie -> forwarding it to locals for view
+    if(req.isAuthenticated()){
+        res.locals.user = req.user;
+    }
+    return next();
+}
+  
+module.exports = passport;

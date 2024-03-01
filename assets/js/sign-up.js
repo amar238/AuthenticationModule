@@ -42,26 +42,24 @@ function onClick(e) {
                 confirmPassword: confirmPassword,
                 recaptchaToken: token
             };
-            // Send the input data + recaptcha token to the server using an HTTP request
-            fetch('/create-user', {
+            // send OTP
+            fetch('/otp/send-otp-signup',{
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+                headers:{
+                    'Content-Type':'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({email})
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // window.location.href = '/sign-in'; // Redirect to success page
-                    showSuccessAlert("Signed Up!", data.message);
-                } else {
-                    showErrorAlert('Sign Up Failure', data.error);
-                    throw new Error();
+            .then(response => response.text())
+            .then(async(data)=>{
+                var enteredOTP = await getOTP(data);
+                // const enteredOTP = prompt('Please enter the OTP sent to your email');
+                if (enteredOTP) {
+                    verifyOTP(email, enteredOTP, userData);
                 }
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(error => {
+                console.error('Error:', error);
             });
         })
         .catch((error) => {
@@ -70,6 +68,69 @@ function onClick(e) {
     });
 }
 
+async function getOTP(){
+    const { value: enteredOTP, isDismissed } = await swal.fire({
+        title: 'Please enter the OTP sent to your email',
+        input: 'text',
+        inputPlaceholder: 'Enter OTP',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+    });
+
+    if (isDismissed) {
+        console.log('User canceled OTP entry');
+        return null; // Return null if the user canceled
+    } else {
+        console.log('Entered OTP:', enteredOTP);
+        return enteredOTP; // Return entered OTP if provided
+    }
+}
+function verifyOTP(email, otp, userData) {
+    fetch('/otp/verify-otp-signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, otp, userData })
+    })
+    .then(response => response.text())
+    .then(data => {
+      if (data === 'OTP verified successfully') {
+        signUp(userData);
+        // document.getElementById('signupForm').submit();
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+function signUp(userData){
+    // Send the input data + recaptcha token to the server using an HTTP request
+    fetch('/create-user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        if (data.success) {
+            // window.location.href = '/sign-in'; // Redirect to success page
+            showSuccessAlert("Signed Up!", data.message);
+        } else {
+            showErrorAlert('Sign Up Failure', data.error);
+            throw new Error();
+        }
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
+// function to show success alert
 function showSuccessAlert(title, message) {
     Swal.fire({
         title: title,
@@ -79,7 +140,7 @@ function showSuccessAlert(title, message) {
         footer: '<a href="/sign-in" class="bg-green-500 text-white py-2 px-4 rounded">Sign In</a>'
     });
 }
-
+// function to display error
 function showErrorAlert(title, error) {
     Swal.fire({
         title: title,
@@ -88,5 +149,4 @@ function showErrorAlert(title, error) {
         confirmButtonText: 'OK',
     });
 }
-
 

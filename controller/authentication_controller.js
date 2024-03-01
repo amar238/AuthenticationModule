@@ -4,15 +4,14 @@ const User = require('../model/user');
 const saltRounds = parseInt(process.env.saltRounds);
 const axios = require('axios');
 
+module.exports.home = (req,res)=>{
+    res.render('home');
+}
+
 // render sign in page
 module.exports.signInPage = (req,res)=>{
 
     res.render('sign_in')
-}
-
-// after sign in user
-module.exports.createSession = (req,res)=>{
-    return;
 }
 
 // render sign up page
@@ -21,17 +20,15 @@ module.exports.signUpPage = (req,res)=>{
     res.render('sign_up')
 }
 
+// after sign in user
+module.exports.createSession = async(req,res,next)=>{
+    return res.status(200).json({ success:true, message:'User created successfully!'});
+}
+
 // create user
 module.exports.create = async(req,res)=>{
     try {
-        var {firstName, lastName, email, password, confirmPassword, recaptchaToken} = req.body;
-        // Validate reCAPTCHA token
-        const recaptchaSecretKey = process.env.recaptchaSecretKey
-        const recaptchaResponse = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${recaptchaToken}`);
-        if (!recaptchaResponse.data.success || recaptchaResponse.data.score < 0.5) {
-            return res.status(400).json({ success: false, error: 'reCAPTCHA validation failed' });
-        }
-        // validation
+        var {firstName, lastName, email, password, confirmPassword} = req.body;
         if(!validator.isAlpha(firstName) || !validator.isAlpha(lastName)){
             return res.status(400).json({ success:false, error: 'First name and last name should only contain alphabets!'});
         }
@@ -58,9 +55,24 @@ module.exports.create = async(req,res)=>{
     }
 }
 
+// function to validate Recaptcha
+module.exports.verifyRecaptcha = async(req,res,next)=>{
+    try {
+        const recaptchaToken = req.body.recaptchaToken;
+        const recaptchaSecretKey = process.env.recaptchaSecretKey;
+        const recaptchaResponse = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${recaptchaToken}`);
+        if (!recaptchaResponse.data.success || recaptchaResponse.data.score < 0.5) {
+            return res.status(400).json({ success: false, error: 'reCAPTCHA validation failed' });
+        }
+        return next();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // logout user
 module.exports.destroySession = (req,res)=>{
-    // req.logout(()=>{});
+    req.logout(()=>{});
     res.redirect('/sign-in');
 }
 
