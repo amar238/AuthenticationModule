@@ -27,8 +27,8 @@ Users are notified for invalid email input.
 
 # Technical Details:
 ## Technology Stack:
-- Frontend: HTML, Tailwind CSS, JavaScript (or framework of choice)
-- Backend: Node.js (or framework of choice), Express.js, Redis (for job queue), MongoDB (or database of choice)
+- Frontend: HTML, Tailwind CSS, JavaScript, AJAX
+- Backend: Node.js, Express.js, Redis (for job queue), MongoDB
 - Authentication: reCAPTCHA, Google OAuth, Email OTP verification
 ## Architecture:
 - Utilized a modular and scalable architecture (MVC) to ensure maintainability and extensibility.
