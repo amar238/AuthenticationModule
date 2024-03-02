@@ -1,6 +1,6 @@
-const nodemailer = require('../middleware/nodemailer');
-
+const queue = require('../middleware/bull');
 const otps = new Map();
+
 function generateOTP(email) {
     const otp = Math.floor(100000 + Math.random() * 900000);; // Function to generate a random OTP
     const otpValidityDuration = 5 * 60 * 1000;
@@ -12,27 +12,20 @@ function generateOTP(email) {
 }
 
 module.exports.SendSignUpOtp = async(req,res)=>{
+  try {
     const { email }= req.body;
-    const otp = generateOTP(email);
-    console.log(otps)
-    const server_email = process.env.server_email;
-    let htmlString = nodemailer.renderTemplate({otp:otp},'/email_templates/signup_otp.ejs');
-    const mailOptions = {
-        from: server_email,
-        to: email,
-        subject: 'Verification OTP',
-        html: htmlString
-    };
-
-   nodemailer.transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error(error);
-          res.status(500).send('Failed to send OTP');
-        } else {
-          console.log('Email sent: ' + info.response);
-          res.status(200).send('OTP sent successfully');
-        }
-    });
+    const otp = generateOTP(email);  
+    const OTP = {
+      otp:otp,
+      to:email
+    }
+    console.log(OTP)
+    await queue.add(OTP);
+    res.status(200).send('OTP sent successfully');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Failed to send OTP');
+  }  
 }
 
 module.exports.verifySignUpOtp=(req,res)=>{
