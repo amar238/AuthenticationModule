@@ -1,5 +1,6 @@
 const nodemailer = require('../middleware/nodemailer');
 
+//sending email otp
 module.exports.emailSignUpOTP =async(OTP)=>{
     const server_email = process.env.server_email;
     let htmlString = nodemailer.renderTemplate({otp:OTP.otp},'/email_templates/signup_otp.ejs');

@@ -1,6 +1,8 @@
 const queue = require('../middleware/bull');
+const signUpOTPWorker = require('../workers/signUpOTPWorker');
 const otps = new Map();
 
+// generate time bound otp for email
 function generateOTP(email) {
     const otp = Math.floor(100000 + Math.random() * 900000);; // Function to generate a random OTP
     const otpValidityDuration = 5 * 60 * 1000;
@@ -11,6 +13,7 @@ function generateOTP(email) {
     return otp;
 }
 
+// send generated otp for Sign Up process
 module.exports.SendSignUpOtp = async(req,res)=>{
   try {
     const { email }= req.body;
@@ -21,6 +24,7 @@ module.exports.SendSignUpOtp = async(req,res)=>{
     }
     console.log(OTP)
     await queue.add(OTP);
+
     res.status(200).send('OTP sent successfully');
   } catch (error) {
     console.log(error);
@@ -28,9 +32,9 @@ module.exports.SendSignUpOtp = async(req,res)=>{
   }  
 }
 
+// get otp from user and validate 
 module.exports.verifySignUpOtp=(req,res)=>{
     var { email, otp } = req.body;
-    // otp = parseInt(otp)
     if (otps.has(email) && otps.get(email) == otp) {
       res.status(200).send('OTP verified successfully');
       otps.delete(email);

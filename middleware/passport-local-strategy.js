@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../model/user');
 const LocalStrategy = require("passport-local").Strategy;
 
+// passport local strategy
 passport.use(new LocalStrategy({
         usernameField: 'email',
     },
@@ -23,10 +24,12 @@ passport.use(new LocalStrategy({
             console.log(error)
 }}));
 
+// seializer
 passport.serializeUser((user, done) => {
     return done(null, user.id);
 });
 
+// deserializer
 passport.deserializeUser(async (id, done) => {
     try {
         const user =await User.findById(id);
@@ -37,6 +40,7 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+// check if user is logged in
 passport.checkAuthentication = (req,res,next)=>{
     // if user is authenticated send to next page
     if(req.isAuthenticated()){
@@ -46,7 +50,7 @@ passport.checkAuthentication = (req,res,next)=>{
     return res.redirect('/sign-in');
 }
 
-  
+// set logged in user
 passport.setAuthenticatedUser = (req,res,next)=>{
     // req.user contains current signed in user from session cookie -> forwarding it to locals for view
     if(req.isAuthenticated()){

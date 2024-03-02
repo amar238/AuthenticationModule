@@ -4,9 +4,12 @@ const crypto = require('crypto');
 const User = require('../model/user');
 const bcrypt = require('bcrypt');
 
+// google auth credentials
 const saltRounds = parseInt(process.env.saltRounds);
 const googleOauthClientId = process.env.googleOauthClientId
 const googleOauthClientSecret = process.env.googleOauthClientSecret
+
+// google auth strategy
 passport.use(new googleStrategy({
         clientID: googleOauthClientId,
         clientSecret: googleOauthClientSecret,
@@ -19,10 +22,7 @@ passport.use(new googleStrategy({
             if(user){
                 return done(null, user);
             }else{
-                let nameArray = profile.displayName.split(' ');
-                let firstName = nameArray[0];
-                let lastName = nameArray.slice(1).join(' ');
-
+                // generate random password and encrypt it
                 const password= crypto.randomBytes(20).toString('hex');
                 const salt = await bcrypt.genSalt(saltRounds);
                 hashedPassword = await bcrypt.hash(password,salt);

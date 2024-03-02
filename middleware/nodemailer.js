@@ -10,7 +10,7 @@ const secure=process.env.transporter_secure;
 const user=process.env.transporter_user;
 const password=process.env.transporter_password;
 
-
+// transporter for sending email otp
 let transporter = nodemailer.createTransport({
     service: service,
     host: host,
@@ -22,7 +22,7 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-// take ejs file using relative path and put data in to send via email
+// render email body in string
 let renderTemplate = (data,relativePath)=>{
     let mailHTML;
     ejs.renderFile(

@@ -1,9 +1,13 @@
 const queue = require('../middleware/bull');
 const signUpOTPMailer = require('../mailers/sign_up_otp_mailer');
 
-queue.process('signUpOTPQueue',async(job,done)=>{
-    await signUpOTPMailer.emailSignUpOTP(job.data);
-    done();
+// processing job of sending email otp
+queue.process(async (job, done) => {
+    try {
+      await signUpOTPMailer.emailSignUpOTP(job.data); // Process job data
+      done(); // Mark job as done
+    } catch (error) {
+      console.error('Error processing job:', error); // Log any errors
+      done(error); // Mark job as failed
     }
-)
-
+  });

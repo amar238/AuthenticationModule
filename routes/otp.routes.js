@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const otpController = require('../controller/otp_verifications_controller');
 
+//outes for sending and verifying otp during signup
 router.post('/send-otp-signup',otpController.SendSignUpOtp);
 router.post('/verify-otp-signup',otpController.verifySignUpOtp);
 
