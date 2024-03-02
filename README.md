@@ -34,4 +34,4 @@ Users are notified for invalid email input.
 - Utilized a modular and scalable architecture (MVC) to ensure maintainability and extensibility.
 - Separated concerns into modules for authentication, email services, job processing, etc., to keep the codebase organized and manageable.
 ## Security Measures:
-- Implemented Bcrypt for encryption of password data, validation of user inputs, and protection against common web vulnerabilities (e.g., XSS, CSRF).
+- Implemented Bcrypt for encryption of password data, validation of user inputs.
