@@ -1,14 +1,15 @@
 const Queue = require('bull');
-const RedisPort = parseInt(process.env.RedisPort);
-const RedisHost =process.env.RedisHost;
-
+// const RedisPort = parseInt(process.env.RedisPort);
+// const RedisHost =process.env.RedisHost;
+const RedisUrl = process.env.RedisUrl;
+const queue = new Queue('signUpOTPQueue',RedisUrl);
 // parallel jobs queue for sending email otps
-const queue = new Queue('signUpOTPQueue',{
-    redis: {
-        port: RedisPort, // Redis port
-        host: RedisHost // Redis host
-      }
-});
+// const queue = new Queue('signUpOTPQueue',{
+//     redis: {
+//         port: RedisPort, // Redis port
+//         host: RedisHost // Redis host
+//       }
+// });
 
 // Listen for completed jobs
 queue.on('completed', (job) => {
