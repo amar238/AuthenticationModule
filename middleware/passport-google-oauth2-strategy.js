@@ -13,7 +13,7 @@ const googleOauthClientSecret = process.env.googleOauthClientSecret
 passport.use(new googleStrategy({
         clientID: googleOauthClientId,
         clientSecret: googleOauthClientSecret,
-        callbackURL: "http://localhost:8080/auth/google/callback"
+        callbackURL: "https://authenticationmodule.onrender.com/auth/google/callback"
     },
     async(accessToken, refreshToken, profile, done)=>{
         try {
