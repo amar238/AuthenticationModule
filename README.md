@@ -35,3 +35,27 @@ Users are notified for invalid email input.
 - Separated concerns into modules for authentication, email services, job processing, etc., to keep the codebase organized and manageable.
 ## Security Measures:
 - Implemented Bcrypt for encryption of password data, validation of user inputs.
+
+# Installing on your device
+- clone repo
+- npm install
+- install radis server
+- create .env file for following variables
+  - PORT =
+  - user= 
+  - password=
+  - mongoDB=
+  - saltRounds=5
+  - recaptchaSecretKey=
+  - googleOauthClientId=
+  - googleOauthClientSecret= 
+  - transporter_service=
+  - transporter_host=
+  - transporter_port=
+  - transporter_secure=
+  - transporter_user=
+  - transporter_password=
+  - server_email=
+  - RedisPort =
+  - RedisHost =
+  - Session_Secret=
